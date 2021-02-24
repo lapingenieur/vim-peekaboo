@@ -82,13 +82,42 @@ function! s:append_group(title, regs)
   if !compact | call append(line('$'), '') | endif
 endfunction
 
+" lapingenieur function : toggle line wrapping
+function! peekaboo#wrap()
+  try
+    if g:peekaboo_wrap == 1
+      let g:peekaboo_wrap = 0
+      "setlocal wrap
+      echo "peekaboo#wrap : set no wrapping"
+    elseif g:peekaboo_wrap == 0
+      let g:peekaboo_wrap = 1
+      "setlocal nowrap
+      echo "peekaboo#wrap : set wrapping"
+    endif
+  catch
+    let g:peekaboo_wrap = 1
+    setlocal wrap
+    echo "peekaboo#wrap : set wrapping"
+  endtry
+endfunction
+
 " Opens peekaboo window
 function! s:open(mode)
   let [s:buf_current, s:buf_alternate, s:winrestcmd] = [@%, @#, winrestcmd()]
   execute get(g:, 'peekaboo_window', s:default_window)
   let s:buf_peekaboo = bufnr('')
-  setlocal nonumber buftype=nofile bufhidden=wipe nobuflisted noswapfile wrap
+  setlocal nonumber buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap
   \ modifiable statusline=>\ Registers nocursorline nofoldenable
+
+  try
+    if g:peekaboo_wrap == 1
+      setlocal wrap
+    else
+      setlocal nowrap
+    endif
+  catch
+  endtry
+
   if exists('&relativenumber')
     setlocal norelativenumber
   endif
@@ -186,11 +215,21 @@ function! peekaboo#aboo()
       let ch  = getchar()
       let reg = nr2char(ch)
       let key = get(s:scroll, ch, get(s:scroll, reg, ''))
-      if !empty(key)
+      if !empty(key) && ch != 13
         execute 'normal!' key
         call s:gv(visualmode, visible)
         continue
       endif
+
+" wrap mode changing doesn't work here : WHY???
+" I decided to delete enabling it from within peekaboo and unable it thrue a
+"   function (peekaboo#wrap()) which should be remapped to a key to switch
+"   wrapping mode simply (in my config it's remapped to <C-r>)
+"
+"     if ch == 13
+"       call peekaboo#wrap("1")
+"       continue
+"     endif
 
       if zoom
         tab close

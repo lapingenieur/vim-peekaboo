@@ -34,6 +34,7 @@ Customization
 | `g:peekaboo_compact`    | 0 (boolean)     | Compact display                                   |
 | `g:peekaboo_prefix`     | Empty (string)  | Prefix for key mapping (e.g. `<leader>`)          |
 | `g:peekaboo_ins_prefix` | Empty (string)  | Prefix for insert mode key mapping (e.g. `<c-x>`) |
+| `g:peekaboo_wrap`       | 0 (boolean)     | Wrap lines in Peekaboo (0 : no wrap)              |
 
 License
 -------
