@@ -87,7 +87,7 @@ function! s:open(mode)
   let [s:buf_current, s:buf_alternate, s:winrestcmd] = [@%, @#, winrestcmd()]
   execute get(g:, 'peekaboo_window', s:default_window)
   let s:buf_peekaboo = bufnr('')
-  setlocal nonumber buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap
+  setlocal nonumber buftype=nofile bufhidden=wipe nobuflisted noswapfile wrap
   \ modifiable statusline=>\ Registers nocursorline nofoldenable
   if exists('&relativenumber')
     setlocal norelativenumber
